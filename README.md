@@ -5,13 +5,13 @@ Couple of python scripts
 
 ## lbc_parser
 * Recuperer les pages du site le boncoin:
-* lbc_parser.py  <mongodb-host> <mongodb-port> <path to config file>
+* lbc_parser.py  mongodb-host mongodb-port path to config file
 * python3.4 lbc_parser.py localhost 27017 ./conf.txt
 
 
 ##  lbc_server
 * Une page web hautement dynamique...
-* lbc_server.py  <mongodb-host> <mongodb-port> <path to config file> <host-port>
+* lbc_server.py  mongodb-host mongodb-port path to config file host-port
 * python3.4 lbc_server.py localhost 27017 ./conf.txt 8888
 
 ### conf.txt exemple
