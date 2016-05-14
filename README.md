@@ -15,7 +15,7 @@ Couple of python scripts
 * python3.4 lbc_server.py localhost 27017 ./conf.txt 8888
 
 ### conf.txt exemple
-c'est un fichier tabulé
-<url>   <Short-name>
-http://www.leboncoin.fr/locations/offres/midi_pyrenees/?f=a&th=1&ros=5&ret=1&location=Portet-sur-Garonne%2031120        Loc_Portet
-http://www.leboncoin.fr/locations/offres/midi_pyrenees/?f=a&th=1&ros=5&ret=1&location=Saubens%2031600   Loc_Saubens
+* c'est un fichier tabulé
+* <url>   <Short-name>
+* http://www.leboncoin.fr/locations/offres/midi_pyrenees/?f=a&th=1&ros=5&ret=1&location=Portet-sur-Garonne%2031120        Loc_Portet
+* http://www.leboncoin.fr/locations/offres/midi_pyrenees/?f=a&th=1&ros=5&ret=1&location=Saubens%2031600   Loc_Saubens
