@@ -9,7 +9,7 @@ import sys
 import pprint
 from unicodedata import normalize
 
-if not len(sys.argv) != 3:
+if  len(sys.argv) != 3:
     print ('Wrong number of arguments')
     print ('usage: lbc_server.py  <mongodb-host> <mongodb-port> <path to config file> <host-port>')
     sys.exit(-1)

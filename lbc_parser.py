@@ -11,8 +11,8 @@ link =[]
 title =[]
 price = []
 
-if not len(sys.argv) != 3:
-    print ('Wrong number of arguments')
+if  len(sys.argv) != 4:
+    print ('Wrong number of arguments', len(sys.argv))
     print ('usage: lbc_parser.py  <mongodb-host> <mongodb-port> <path to config file>')
     sys.exit(-1)
 
