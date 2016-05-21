@@ -13,6 +13,7 @@ Recuperer les pages du site le boncoin:
 Une page web hautement dynamique...
 * lbc_server.py  mongodb-host mongodb-port path to config file host-port
 * ex: python3.4 lbc_server.py localhost 27017 ./conf.txt 8888
+Necessite cette dépendance systeme https://github.com/JazzCore/python-pdfkit/wiki/Installing-wkhtmltopdf
 
 ### conf.txt exemple
 c'est un fichier tabulé

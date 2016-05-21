@@ -18,6 +18,7 @@ if  len(sys.argv) != 4:
 
 
 client = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/')
+#client = MongoClient('mongodb://' +  'minty' + ':'+ '27017' + '/')
 db = client['LBC']
 coll = db['annonces']
 
@@ -73,6 +74,7 @@ def load_url(data):
 
 # MAIN
 for f in open(sys.argv[3]):
+#for f in open('C:/Users/edavid/hubiC/Prog/pyhtmlparser/conf.txt'):
     data = f.split("\t")
     if data[1] :
         data[1] = data[1].rstrip()
