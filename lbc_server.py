@@ -2,6 +2,8 @@ from  http.server import BaseHTTPRequestHandler,HTTPServer
 import urllib
 import pymongo
 from pymongo import MongoClient
+import gridfs
+from bson.objectid import ObjectId
 import re
 import time
 import cgi
@@ -20,10 +22,12 @@ pp = pprint.PrettyPrinter(indent=4)
 
 client = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/')
 #client = MongoClient('mongodb://' +  'minty' + ':'+ '27017' + '/')
-
 db = client['LBC']
 coll = db['annonces']
 #coll = db['mini']
+
+clientGridfs = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/').LBC_fs
+fs = gridfs.GridFS(clientGridfs)
 
 class GetHandler(BaseHTTPRequestHandler):
     def get_url(self):
@@ -55,11 +59,16 @@ class GetHandler(BaseHTTPRequestHandler):
 
 
     def do_GET(self):
-        if self.path=="/files":
-            page_html = '<html><head></head><body>File handler</body></html>'
+        if "/files" in self.path :
+            parsed_path = self.path.split('/')[2]
+            print("parsed_path", parsed_path)
+            f = fs.get(ObjectId(parsed_path))
             self.send_response(200)
+            mimetype='application/pdf'
+            self.send_header('Content-type',mimetype)
             self.end_headers()
-            self.wfile.write(bytes(page_html, "utf-8"))
+            self.wfile.write(f.read())
+
         else :
             page_html = self.print_html()
             self.send_response(200)
@@ -97,8 +106,10 @@ class GetHandler(BaseHTTPRequestHandler):
                 #text = normalize('NFKD', text).encode('ASCII', 'ignore')
                 print("last", annonce['last'])
                 table_html = table_html + '<td>\n<a target="_blank" href="' + annonce['url']+ '"> ' 
-                table_html = table_html +  text + "</a><br>" 
-                table_html = table_html +  annonce['p_cur'] + " eur" 
+                table_html = table_html +  text + "</a><br>"
+                table_html = table_html +  annonce['p_cur'] + " eur <br>" 
+                if 'gridfs_id' in annonce.keys():
+                    table_html = table_html +  '<a target="_blank" href="/files/' + str(annonce['gridfs_id']) + '">Archive pdf</a><br>' 
                 table_html = table_html +  "<br>" + annonce['s']
                 table_html = table_html +  "<br>" + str(annonce['first']) + "<br>" 
                 table_html = table_html + str(annonce['last']) +"</td>"
