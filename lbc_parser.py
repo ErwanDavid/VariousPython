@@ -1,11 +1,13 @@
 # anchor extraction from html document
 from bs4 import BeautifulSoup
 import urllib.request
-import re
-import string
+import string, re
 from pymongo import MongoClient
+import gridfs
 from datetime import datetime
 import sys
+import pdfkit
+
 
 link =[]
 title =[]
@@ -18,9 +20,12 @@ if  len(sys.argv) != 4:
 
 
 client = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/')
-#client = MongoClient('mongodb://' +  'minty' + ':'+ '27017' + '/')
 db = client['LBC']
 coll = db['annonces']
+
+clientGridfs = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/').LBC_fs
+fs = gridfs.GridFS(clientGridfs)
+
 
 def string_clean(mystr):
     mystr = re.sub(' \s+','',mystr)
@@ -37,11 +42,20 @@ def int_clean(mystr):
     return mystr
 
 def is_linked(href):
-    return href and re.compile("\d{8}\.htm").search(href)
+    return href and re.compile("\d{8}\d*\.htm").search(href)
 
 def extractid(href):
-    myid = re.search("\d{8}", href).group(0)
+    myid = re.search("\d{8}\d*", href).group(0)
     return str(myid)
+
+def savepdf(url,title,category):
+    title = re.sub('[^0-9a-zA-Z]+', '-', title)
+    filemane = 'tmp/' + category + '_' + title + '.pdf'
+    pdfkit.from_url(url, filemane)
+
+    file = open(filemane, 'rb')
+    gridfsid = fs.put( file.read(), filename=filemane)
+    return gridfsid
 
 def load_url(data):
     webpage = urllib.request.urlopen(data[0])
@@ -70,11 +84,11 @@ def load_url(data):
         if result['n'] == 0 :
             firstdate = datetime.now()
             print("NEW ", result['n'])
-            result = coll.insert({"_id": extractid(link[i]), "url": link[i], "p_init" : price[i] , "t" : title[i], 's' : data[1] ,'first': firstdate })
+            gridfsid = savepdf(link[i], title[i],data[1])
+            result = coll.insert({"_id": extractid(link[i]), "url": link[i], "p_init" : price[i] , "t" : title[i], 's' : data[1] ,'first': firstdate, 'gridfs_id' :  gridfsid})
 
 # MAIN
 for f in open(sys.argv[3]):
-#for f in open('C:/Users/edavid/hubiC/Prog/pyhtmlparser/conf.txt'):
     data = f.split("\t")
     if data[1] :
         data[1] = data[1].rstrip()

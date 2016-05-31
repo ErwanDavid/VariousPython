@@ -55,7 +55,12 @@ class GetHandler(BaseHTTPRequestHandler):
 
 
     def do_GET(self):
-        if (True) :
+        if self.path=="/files":
+            page_html = '<html><head></head><body>File handler</body></html>'
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(bytes(page_html, "utf-8"))
+        else :
             page_html = self.print_html()
             self.send_response(200)
             self.end_headers()
