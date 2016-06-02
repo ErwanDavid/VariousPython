@@ -7,6 +7,7 @@ import gridfs
 from datetime import datetime
 import sys
 import pdfkit
+import pprint
 
 
 link =[]
@@ -18,12 +19,12 @@ if  len(sys.argv) != 4:
     print ('usage: lbc_parser.py  <mongodb-host> <mongodb-port> <path to config file>')
     sys.exit(-1)
 
-
+pp = pprint.PrettyPrinter(indent=4)
 client = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/')
-db = client['LBC']
+db = client['LBC2']
 coll = db['annonces']
 
-clientGridfs = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/').LBC_fs
+clientGridfs = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/').LBC2_fs
 fs = gridfs.GridFS(clientGridfs)
 
 
@@ -42,6 +43,7 @@ def int_clean(mystr):
     return mystr
 
 def is_linked(href):
+    #print("test", href)
     return href and re.compile("\d{8}\d*\.htm").search(href)
 
 def extractid(href):
@@ -60,35 +62,44 @@ def savepdf(url,title,category):
 def load_url(data):
     webpage = urllib.request.urlopen(data[0])
     soup = BeautifulSoup(webpage, "html.parser")
+    cpt = 0
 
     for obj in soup.find_all(href=is_linked):
         link.append(("http:" + obj.get('href')))
-        print("append","http:" + obj.get('href'))
+        cpt=cpt +1
+        print(cpt, "BS_ link","http:" + obj.get('href'))
 
     for obj in soup.find_all(class_="item_title"):
         title.append(string_clean(obj.get_text()))
+        print(cpt, "BS_title",string_clean(obj.get_text()))
 
     for obj in soup.find_all(class_="item_price"):
         price.append(int_clean(obj.contents[0]))
+        print(cpt, "BS_price", int_clean(obj.contents[0]))
 
     for i in range(0,len(title)) :
         try:
-            print(title[i], "\t", price[i], "\t", extractid(link[i]))
+            curId = extractid(link[i])
+            print(title[i], "\t", price[i], "\t", curId)
         except:
-            print("Error", title[i])
+            print("Error", title[i], "price", price[i])
             continue
-        print("a")
-        result = coll.update({"_id": extractid(link[i])},{"$currentDate": {'last': { '$type': 'date' }}},upsert=False)
-        result = coll.update({"_id": extractid(link[i])},{"$set" : {"p_cur" : price[i]}},upsert=False)
-        # If exists
+        print("Try Update",  curId, "title", title[i] )
+        result = coll.update({"_id": curId},{"$currentDate": {'last': { '$type': 'date' }}},upsert=False)
+        result = coll.update({"_id": curId},{"$set" : {"p_cur" : price[i]}},upsert=False)
+        print("Update result",  result['n'] )
         if result['n'] == 0 :
-            firstdate = datetime.now()
-            print("NEW ", result['n'])
+            firstdate = datetime.utcnow()
+            print("INSERT", curId, "title", title[i] )
             gridfsid = savepdf(link[i], title[i],data[1])
-            result = coll.insert({"_id": extractid(link[i]), "url": link[i], "p_init" : price[i] , "t" : title[i], 's' : data[1] ,'first': firstdate, 'gridfs_id' :  gridfsid})
+            insert = {"_id": curId, "url": link[i], "p_init" : price[i] , "t" : title[i], 's' : data[1] ,'first': firstdate, 'gridfs_id' :  gridfsid}
+            pp.pprint(insert)
+            result = coll.insert(insert)
 
 # MAIN
 for f in open(sys.argv[3]):
+    if f.startswith('#'):
+        continue
     data = f.split("\t")
     if data[1] :
         data[1] = data[1].rstrip()
