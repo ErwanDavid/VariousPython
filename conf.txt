@@ -1,6 +1,3 @@
-http://www.leboncoin.fr/locations/offres/midi_pyrenees/?f=a&th=1&ros=5&ret=1&location=Portet-sur-Garonne%2031120	Loc_Portet
-http://www.leboncoin.fr/locations/offres/midi_pyrenees/?f=a&th=1&ros=5&ret=1&location=Saubens%2031600	Loc_Saubens
-http://www.leboncoin.fr/locations/offres/midi_pyrenees/?f=a&th=1&ros=5&ret=1&location=Pinsaguel%2031120	Loc_Pinsaguel
 http://www.leboncoin.fr/ventes_immobilieres/offres/midi_pyrenees/?f=a&th=1&pe=16&ros=5&ret=1&q=piscine&location=Portet-sur-Garonne%2031120	Ach_Portet_Piscine
 http://www.leboncoin.fr/ventes_immobilieres/offres/midi_pyrenees/?f=a&th=1&pe=16&ros=5&ret=1&location=Portet-sur-Garonne%2031120	Ach_Portet
 http://www.leboncoin.fr/ventes_immobilieres/offres/midi_pyrenees/?f=a&th=1&pe=16&ros=5&ret=1&q=piscine&location=Saubens%2031600	Ach_Saubens
@@ -9,3 +6,4 @@ http://www.leboncoin.fr/voitures/offres/midi_pyrenees/bonnes_affaires/?f=a&th=1&
 http://www.leboncoin.fr/voitures/offres/midi_pyrenees/bonnes_affaires/?f=a&th=1&me=125000&gb=2&q=prius+plus&it=1	Voit_prius
 http://www.leboncoin.fr/voitures/offres/midi_pyrenees/bonnes_affaires/?f=a&th=1&ps=18&me=80000&gb=2&q=xc&it=1	Voit_volvo
 http://www.leboncoin.fr/voitures/offres/midi_pyrenees/bonnes_affaires/?f=a&th=1&fu=1&q=suburban&it=1	Voit_suburban
+https://www.leboncoin.fr/voitures/offres/midi_pyrenees/bonnes_affaires/?th=1&q=pajero%205%20portes	Voit_Pajero-long

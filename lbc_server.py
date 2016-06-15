@@ -22,10 +22,10 @@ pp = pprint.PrettyPrinter(indent=4)
 
 
 client = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/')
-db = client['LBC2']
+db = client['LBC3']
 coll = db['annonces']
 
-clientGridfs = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/').LBC2_fs
+clientGridfs = MongoClient('mongodb://' +  sys.argv[1] + ':'+ sys.argv[2] + '/').LBC3_fs
 fs = gridfs.GridFS(clientGridfs)
 
 class GetHandler(BaseHTTPRequestHandler):
@@ -102,6 +102,10 @@ class GetHandler(BaseHTTPRequestHandler):
                 pp.pprint(annonce)
                 text = annonce['t']
                 present = datetime.utcnow()
+                if 'last' not in annonce.keys():
+                    annonce['last'] = present
+                if 'p_cur' not in annonce.keys():
+                    annonce['p_cur'] = annonce['p_init']
                 delta = present - annonce['last']
                 deltai = delta.days*24 + delta.seconds/60
                 if deltai > 60:
